@@ -1,17 +1,27 @@
 const http = require('http');
+const bodyParser = require('body-parser');
 
 const express = require('express')
 
 const app = express();
 
-app.use((req, res, next)=>{
-    console.log('In the mddleware');
-    next(); //allows the request to continue to next middleware in line
+app.use(bodyParser.urlencoded({extended: false}));
+
+
+app.use('/add-product', (req, res, next)=>{
+    console.log('In the next mddleware');
+    res.send('<form action="/product" method="POST"><input type="text" name="title" placeholder="object"><input type="number" name="size" placeholder="size"><button type="submit">Add Product</button></form>');
+})
+app.post('/product', (req, res, next) => {
+    console.log(req.body);
+    res.redirect('/');
 })
 
-app.use((req, res, next)=>{
+app.use('/', (req, res, next)=>{
     console.log('In the next mddleware');
     res.send('<h1>Hello from Express!</h1>');
-})
+});
+
+
 
 app.listen(3000);
